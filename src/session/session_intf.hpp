@@ -15,9 +15,10 @@
 /*-----------------------------------------------------------------------------
 Includes
 -----------------------------------------------------------------------------*/
-#include <cstddef>
-#include <Iris/src/types.hpp>
 #include <Iris/src/session/session_types.hpp>
+#include <Iris/src/transport/transport_types.hpp>
+#include <Iris/src/types.hpp>
+#include <cstddef>
 
 namespace Iris::Session
 {
@@ -105,7 +106,9 @@ namespace Iris::Session
     void socket_main();
 
   private:
-    SockCfg config;
+    SockCfg            config;  /**< The configuration for this socket */
+    Transport::TXQueue txQueue; /**< The TX queue for this socket */
+    Transport::TXQueue rxQueue; /**< The RX queue for this socket */
   };
 }  // namespace Iris::Ses
 

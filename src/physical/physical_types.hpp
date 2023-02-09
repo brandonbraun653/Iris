@@ -1,6 +1,6 @@
 /******************************************************************************
  *  File Name:
- *    hw_intf_spec.hpp
+ *    physical_types.hpp
  *
  *  Description:
  *    Specification of the hardware interface
@@ -9,13 +9,13 @@
  *****************************************************************************/
 
 #pragma once
-#ifndef IRIS_HW_INTF_SPEC_HPP
-#define IRIS_HW_INTF_SPEC_HPP
+#ifndef IRIS_physical_types_HPP
+#define IRIS_physical_types_HPP
 
 /*-----------------------------------------------------------------------------
 Includes
 -----------------------------------------------------------------------------*/
-#include "iris_hw_intf_prj.hpp"
+#include "iris_physical_prj.hpp"
 #include <Iris/src/types.hpp>
 #include <cstdint>
 #include <etl/delegate.h>
@@ -165,4 +165,4 @@ namespace Iris::Phy
 
 }    // namespace Iris::Phy
 
-#endif /* !IRIS_HW_INTF_SPEC_HPP */
+#endif /* !IRIS_physical_types_HPP */

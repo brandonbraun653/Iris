@@ -3,15 +3,16 @@
  *    physical
  *
  *  Description:
- *    Physical layer interface includes
+ *    Transport layer interface includes
  *
  *  2023 | Brandon Braun | brandonbraun653@gmail.com
  *****************************************************************************/
 
 #pragma once
-#ifndef IRIS_PHYSICAL_INCLUDES
-#define IRIS_PHYSICAL_INCLUDES
+#ifndef IRIS_TRANSPORT_INCLUDES
+#define IRIS_TRANSPORT_INCLUDES
 
-#include <Iris/src/physical/physical_types.hpp>
+#include <Iris/src/transport/transport_types.hpp>
+#include <Iris/src/transport/transport_packet.hpp>
 
-#endif /* !IRIS_PHYSICAL_INCLUDES */
+#endif /* !IRIS_TRANSPORT_INCLUDES */

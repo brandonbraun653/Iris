@@ -16,7 +16,7 @@
 Includes
 -----------------------------------------------------------------------------*/
 #include <cstdint>
-#include <Iris/src/physical/hw_intf_spec.hpp>
+#include <Iris/src/physical/physical_types.hpp>
 
 namespace Iris::Session
 {
