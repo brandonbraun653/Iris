@@ -1,48 +1,32 @@
 /******************************************************************************
  *  File Name:
- *    transport_packet.cpp
+ *    session_mngr.hpp
  *
  *  Description:
- *    Packet abstraction for the transport layer
+ *    Manager for the session layer
  *
  *  2023 | Brandon Braun | brandonbraun653@protonmail.com
  *****************************************************************************/
 
+#pragma once
+#ifndef IRIS_SESSION_MANAGER_HPP
+#define IRIS_SESSION_MANAGER_HPP
+
 /*-----------------------------------------------------------------------------
 Includes
 -----------------------------------------------------------------------------*/
-#include <Iris/transport>
-#include <limits>
 
-namespace Iris::Transport
+
+namespace Iris::Session
 {
   /*---------------------------------------------------------------------------
   Classes
   ---------------------------------------------------------------------------*/
-  Packet::Packet()
+  class SessionManager
   {
-  }
+  public:
 
+  };
+}    // namespace Iris::Session
 
-  Packet::~Packet()
-  {
-  }
-
-
-  void Packet::initialize( Physical::FramePool &pool )
-  {
-    head.set_pool( pool );
-    head.clear();
-  }
-
-
-  Errno_t Packet::addFrame( Physical::Frame &frame )
-  {
-  }
-
-
-  void Packet::ackFrame( const size_t idx )
-  {
-  }
-
-}    // namespace Iris::Transport
+#endif /* !IRIS_SESSION_MANAGER_HPP */

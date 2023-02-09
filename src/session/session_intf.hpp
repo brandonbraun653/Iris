@@ -23,6 +23,11 @@ Includes
 namespace Iris::Session
 {
   /*---------------------------------------------------------------------------
+  Forward Declarations
+  ---------------------------------------------------------------------------*/
+  class SessionManager;
+
+  /*---------------------------------------------------------------------------
   Classes
   ---------------------------------------------------------------------------*/
   class Socket
@@ -54,7 +59,7 @@ namespace Iris::Session
      * @param timeout How long to wait for success
      * @return Errno_t
      */
-    Errno_t connect( const SockConn &conn, const size_t timeout );
+    Errno_t connect( const SocketPort &conn, const size_t timeout );
 
     /**
      * @brief Closes the socket
@@ -100,15 +105,15 @@ namespace Iris::Session
     Errno_t error();
 
   protected:
+    friend class SessionManager;
+
     /**
      * @brief The main socket processing loop
      */
-    void socket_main();
+    void accept_frame( const Physical::Frame &frame );
 
   private:
-    SockCfg            config;  /**< The configuration for this socket */
-    Transport::TXQueue txQueue; /**< The TX queue for this socket */
-    Transport::TXQueue rxQueue; /**< The RX queue for this socket */
+    SockCfg config; /**< The configuration for this socket */
   };
 }  // namespace Iris::Ses
 

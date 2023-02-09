@@ -9,8 +9,8 @@
  *****************************************************************************/
 
 #pragma once
-#ifndef IRIS_physical_types_HPP
-#define IRIS_physical_types_HPP
+#ifndef IRIS_PHYSICAL_TYPES_HPP
+#define IRIS_PHYSICAL_TYPES_HPP
 
 /*-----------------------------------------------------------------------------
 Includes
@@ -21,20 +21,9 @@ Includes
 #include <etl/delegate.h>
 #include <etl/forward_list.h>
 
-namespace Iris::Phy
-{
-  /*---------------------------------------------------------------------------
-  Aliases
-  ---------------------------------------------------------------------------*/
-#ifndef IRIS_HW_INTF_PRJ_FRAME_TYPES
-  using FrameSize_t     = uint16_t;
-  using FragmentId_t    = uint8_t;
-  using TransactionId_t = uint8_t;
-#endif /* !IRIS_HW_INTF_PRJ_FRAME_TYPES */
-
-  /*---------------------------------------------------------------------------
-  Literal Constants
-  ---------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------
+Literal Constants
+-----------------------------------------------------------------------------*/
 #ifndef IRIS_HW_INTF_MAX_FRAME_SIZE
 /**
  * @brief The maximum size of a frame that can be sent or received on the HW interface
@@ -42,29 +31,43 @@ namespace Iris::Phy
 #define IRIS_HW_INTF_MAX_FRAME_SIZE ( 128 )
 #endif
 
-#ifndef IRIS_HW_INTF_PRJ_HEADER_SIZE
-  /**
-   * @brief Size of the HW driver header in bytes, if required
-   */
-#define IRIS_HW_INTF_PRJ_HEADER_SIZE ( 4 )
+#ifndef IRIS_PHY_PRJ_HEADER_SIZE
+/**
+ * @brief Size of the HW driver header in bytes, if required
+ */
+#define IRIS_PHY_PRJ_HEADER_SIZE ( 4 )
 #endif
 
-#ifndef IRIS_HW_INTF_PRJ_PAYLOAD_SIZE
-  /**
-   * @brief Maximum size of the payload in bytes
-   */
-#define IRIS_HW_INTF_PRJ_PAYLOAD_SIZE                                                                                 \
-  ( IRIS_HW_INTF_MAX_FRAME_SIZE - IRIS_HW_INTF_PRJ_HEADER_SIZE - sizeof( TransactionId_t ) - sizeof( FragmentId_t ) - \
-    sizeof( FrameSize_t ) )
+#ifndef IRIS_PHY_PRJ_PAYLOAD_SIZE
+/**
+ * @brief Maximum size of the payload in bytes
+ */
+#define IRIS_PHY_PRJ_PAYLOAD_SIZE                                                                        \
+  ( IRIS_HW_INTF_MAX_FRAME_SIZE - IRIS_PHY_PRJ_HEADER_SIZE - sizeof( Iris::Physical::TransactionId_t ) - \
+    sizeof( Iris::Physical::FragmentId_t ) - sizeof( Iris::Physical::FrameSize_t ) )
 #endif
 
-#ifndef IRIS_HW_INTF_PRJ_FRAME_POOL_SIZE
-  /**
-   * @brief Total frames available in the frame pool
-   * @note These frames are used for building packets in send and receive buffers
-   */
-#define IRIS_HW_INTF_PRJ_FRAME_POOL_SIZE ( 32 )
+#ifndef IRIS_PHY_PRJ_FRAME_POOL_SIZE
+/**
+ * @brief Total frames available in the frame pool
+ * @note These frames are used for building packets in send and receive buffers
+ */
+#define IRIS_PHY_PRJ_FRAME_POOL_SIZE ( 32 )
 #endif
+
+namespace Iris::Physical
+{
+  /*---------------------------------------------------------------------------
+  Aliases
+  ---------------------------------------------------------------------------*/
+  using FrameList = etl::forward_list_ext<Frame>;
+  using FramePool = etl::ipool;
+  using DfltFramePool = etl::pool<Frame, IRIS_PHY_PRJ_FRAME_POOL_SIZE>;
+#ifndef IRIS_PHY_PRJ_FRAME_TYPES
+  using FrameSize_t     = uint16_t;
+  using FragmentId_t    = uint8_t;
+  using TransactionId_t = uint8_t;
+#endif /* !IRIS_PHY_PRJ_FRAME_TYPES */
 
   /*---------------------------------------------------------------------------
   Structures
@@ -75,13 +78,13 @@ namespace Iris::Phy
    */
   struct Frame
   {
-#if IRIS_HW_INTF_PRJ_HEADER_SIZE > 0
-    uint8_t header[ IRIS_HW_INTF_PRJ_HEADER_SIZE ]; /**< Optional header for the HW driver */
+#if IRIS_PHY_PRJ_HEADER_SIZE > 0
+    uint8_t header[ IRIS_PHY_PRJ_HEADER_SIZE ]; /**< Optional header for the HW driver */
 #endif
-    TransactionId_t transaction;                           /**< Transaction ID of packet */
-    FragmentId_t    fragment;                              /**< Fragment number */
-    FrameSize_t     size;                                  /**< Size of the data */
-    uint8_t         data[ IRIS_HW_INTF_PRJ_PAYLOAD_SIZE ]; /**< Data being sent or received */
+    TransactionId_t transaction;                       /**< Transaction ID of packet */
+    FragmentId_t    fragment;                          /**< Fragment number */
+    FrameSize_t     size;                              /**< Size of the data */
+    uint8_t         data[ IRIS_PHY_PRJ_PAYLOAD_SIZE ]; /**< Data being sent or received */
   };
 #pragma pack( pop )
   static_assert( sizeof( Frame ) == IRIS_HW_INTF_MAX_FRAME_SIZE, "Frame size is incorrect" );
@@ -156,13 +159,6 @@ namespace Iris::Phy
     etl::delegate<Errno_t( Frame & )> get;
   };
 
+}    // namespace Iris::Physical
 
-  /*---------------------------------------------------------------------------
-  Aliases
-  ---------------------------------------------------------------------------*/
-  using FrameList = etl::forward_list_ext<Frame>;
-  using FramePool = etl::pool<Frame, IRIS_HW_INTF_PRJ_FRAME_POOL_SIZE>;
-
-}    // namespace Iris::Phy
-
-#endif /* !IRIS_physical_types_HPP */
+#endif /* !IRIS_PHYSICAL_TYPES_HPP */

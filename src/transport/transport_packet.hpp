@@ -25,24 +25,25 @@ namespace Iris::Transport
   class Packet
   {
   public:
-    uint16_t       ttl;      /**< Packet expiry time in milliseconds */
-    Priority       priority; /**< Priority of the packet */
-    QOS            qos;      /**< Quality of service level */
-    Phy::FrameList head;     /**< List head to all frames in the packet */
+    static constexpr size_t MAX_FRAME_CAPACITY = std::numeric_limits<QOSStatus>::digits;
+
+    uint16_t            ttl;       /**< Packet expiry time in milliseconds */
+    Priority            priority;  /**< Priority of the packet */
+    QOS                 qos;       /**< Quality of service level */
+    QOSStatus           qosStatus; /**< Achieved QOS of each frame */
+    Physical::FrameList head;      /**< List head to all frames in the packet */
 
     Packet();
     ~Packet();
 
-    void initialize();
+    void initialize( Physical::FramePool &pool );
 
-    void setFramePool( Phy::FramePool &pool );
-
-    Errno_t addFrame( Phy::Frame &frame );
+    Errno_t addFrame( Physical::Frame &frame );
 
     void ackFrame( const size_t idx );
 
     /**
-     * @brief Comparison operator for priority queue sorting
+     * @brief Comparison operator for packet priority queue sorting
      *
      * @param lhs   The left hand side of the comparison
      * @param rhs   The right hand side of the comparison
@@ -52,10 +53,7 @@ namespace Iris::Transport
     {
       return lhs.priority < rhs.priority;
     }
-
-  private:
-    uint32_t mFrameAckMask; /**< Bitmask of frames that have been acknowledged */
   };
-}  // namespace Iris::Transport
+}    // namespace Iris::Transport
 
-#endif  /* !IRIS_TRANSPORT_PACKET_HPP */
+#endif /* !IRIS_TRANSPORT_PACKET_HPP */

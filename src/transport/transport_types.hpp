@@ -41,9 +41,19 @@ namespace Iris::Transport
   /*---------------------------------------------------------------------------
   Aliases
   ---------------------------------------------------------------------------*/
-  using TXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_TX_PACKET_QUEUE_SIZE>;
-  using RXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_RX_PACKET_QUEUE_SIZE>;
+  using DfltTXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_TX_PACKET_QUEUE_SIZE>;
+  using DfltRXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_RX_PACKET_QUEUE_SIZE>;
+  using PacketQueue = etl::ipriority_queue<Packet, etl::ivector<Packet>>;
 
+  /**
+   * @brief Bitfield representing a transfer state of a frame
+   * @note One bit per-frame
+   *
+   * The meaning of these bits differ depending on the QOS level of the
+   * associated packet. Generally though, if a bit is set, then that packet
+   * has achieved the desired QOS level.
+   */
+  using QOSStatus = uint32_t;
 
   /*---------------------------------------------------------------------------
   Enumerations
@@ -55,9 +65,9 @@ namespace Iris::Transport
    */
   enum class QOS : uint8_t
   {
-    QOS_LEVEL_0,  /**< At-Most-Once service */
-    QOS_LEVEL_1,  /**< At-Least-Once service */
-    QOS_LEVEL_2,  /**< Exactly-Once service */
+    QOS_LEVEL_0, /**< At-Most-Once service */
+    QOS_LEVEL_1, /**< At-Least-Once service */
+    QOS_LEVEL_2, /**< Exactly-Once service */
     QOS_COUNT
   };
 
