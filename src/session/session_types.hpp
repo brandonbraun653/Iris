@@ -16,8 +16,9 @@
 Includes
 -----------------------------------------------------------------------------*/
 #include "iris_session_prj.hpp"
-#include <cstdint>
 #include <Iris/src/physical/physical_types.hpp>
+#include <Iris/src/transport/transport_types.hpp>
+#include <cstdint>
 #include <etl/forward_list.h>
 
 /*-----------------------------------------------------------------------------
@@ -59,8 +60,8 @@ namespace Iris::Session
 
   struct SockStats
   {
-    uint32_t txPackets; /**< Number of packets transmitted */
-    uint32_t rxPackets; /**< Number of packets received */
+    size_t txPackets; /**< Number of packets transmitted */
+    size_t rxPackets; /**< Number of packets received */
   };
 
   /**
@@ -71,6 +72,12 @@ namespace Iris::Session
     Physical::NetifAPI netif;      /**< Network interface driver */
     SocketPool         socketPool; /**< Socket pool to use for this manager */
   };
+
+
+  struct MgrStats
+  {
+    size_t sockets; /**< Number of sockets currently in use */
+  }
 
 }    // namespace Iris::Session
 
