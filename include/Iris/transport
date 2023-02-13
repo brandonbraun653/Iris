@@ -13,6 +13,5 @@
 #define IRIS_TRANSPORT_INCLUDES
 
 #include <Iris/src/transport/transport_types.hpp>
-#include <Iris/src/transport/transport_packet.hpp>
 
 #endif /* !IRIS_TRANSPORT_INCLUDES */

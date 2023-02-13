@@ -16,7 +16,7 @@
 Includes
 -----------------------------------------------------------------------------*/
 #include <Iris/src/session/session_types.hpp>
-#include <etl/delegate.h>
+#include <Iris/src/session/session_intf.hpp>
 
 namespace Iris::Session
 {
@@ -30,16 +30,40 @@ namespace Iris::Session
     ~SessionManager();
 
     /**
-     * @brief Returns the main thread for the session layer
-     * @note This thread will need to be started manually
+     * @brief Initializes the session layer
      *
-     * @return etl::delegate<void(void)>
+     * @param cfg  Configuration parameters for the session layer
+     * @return void
      */
-    etl::delegate<void( void )> mainThread();
+    void open( MgrCfg &cfg );
 
-    void open();
-
+    /**
+     * @brief Shuts down the session layer and all connections
+     * @return void
+     */
     void close();
+
+    /**
+     * @brief Processes all sockets in the session layer to pipe data around
+     * @note This function should be called periodically
+     */
+    void process();
+
+    /**
+     * @brief Creates a new socket and adds it to the session layer for management
+     *
+     * @param cfg   Configuration parameters for the socket
+     * @return Socket*
+     */
+    Socket *createSocket( const SockCfg &cfg );
+
+    /**
+     * @brief Destroys a socket and removes it from the manager
+     *
+     * @param socket  Socket to destroy
+     * @return void
+     */
+    void destroySocket( Socket *socket );
 
     /**
      * @brief Gets the runtime metrics for the session layer
@@ -49,14 +73,8 @@ namespace Iris::Session
     const MgrStats &stats() const;
 
   private:
-    /**
-     * @brief Main thread for the session layer
-     */
-    void mainThreadImpl();
-
-    MgrCfg     mCfg;
-    MgrStats   mStats;
-    SocketList mSockets;
+    MgrCfg   mCfg;
+    MgrStats mStats;
   };
 }    // namespace Iris::Session
 

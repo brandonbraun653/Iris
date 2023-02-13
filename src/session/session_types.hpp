@@ -40,6 +40,7 @@ namespace Iris::Session
   Aliases
   ---------------------------------------------------------------------------*/
   using SocketList     = etl::iforward_list<Socket>;
+  using DfltSocketList = etl::forward_list<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
   using SocketPool     = etl::ipool;
   using DfltSocketPool = etl::pool<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
   using SocketPort     = uint16_t;
@@ -53,9 +54,9 @@ namespace Iris::Session
   struct SockCfg
   {
     SocketPort             listenOn;  /**< Which port to listen on */
-    Physical::FramePool    framePool; /**< Frame pool to use for this socket */
-    Transport::PacketQueue txQueue;   /**< Queue for packet transmission */
-    Transport::PacketQueue rxQueue;   /**< Queue for packet reception */
+    Physical::FramePool    *framePool; /**< Frame pool to use for this socket */
+    Transport::PacketQueue *txQueue;   /**< Queue for packet transmission */
+    Transport::PacketQueue *rxQueue;   /**< Queue for packet reception */
   };
 
   struct SockStats
@@ -70,14 +71,15 @@ namespace Iris::Session
   struct MgrCfg
   {
     Physical::NetifAPI netif;      /**< Network interface driver */
-    SocketPool         socketPool; /**< Socket pool to use for this manager */
+    SocketPool        *socketPool; /**< Socket pool to use for this manager */
+    SocketList        *socketList; /**< Socket list to use for this manager */
   };
 
 
   struct MgrStats
   {
     size_t sockets; /**< Number of sockets currently in use */
-  }
+  };
 
 }    // namespace Iris::Session
 
