@@ -12,7 +12,10 @@
 #ifndef IRIS_SESSION_INCLUDES
 #define IRIS_SESSION_INCLUDES
 
-#include <Iris/src/session/session_intf.hpp>
+#include <Iris/physical>
+#include <Iris/transport>
+
+#include <Iris/src/session/session_sock.hpp>
 #include <Iris/src/session/session_mngr.hpp>
 #include <Iris/src/session/session_types.hpp>
 

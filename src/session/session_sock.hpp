@@ -1,6 +1,6 @@
 /******************************************************************************
  *  File Name:
- *    session_intf.hpp
+ *    session_sock.hpp
  *
  *  Description:
  *    Main interface for the session layer

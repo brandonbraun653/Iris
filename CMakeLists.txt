@@ -17,6 +17,7 @@ target_link_libraries(iris_intf_inc INTERFACE
 # Use this target for linking
 add_library(iris_lib STATIC
   src/session/session_mngr.cpp
+  src/session/session_sock.cpp
   src/transport/transport_packet.cpp
 )
 export(TARGETS iris_lib FILE "Iris/iris_lib.cmake")

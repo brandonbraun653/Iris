@@ -17,7 +17,7 @@ Includes
 -----------------------------------------------------------------------------*/
 #include <cstdint>
 #include <Iris/src/physical/physical_types.hpp>
-#include <etl/priority_queue.h>
+#include <etl/queue_spsc_atomic.h>
 #include "iris_physical_prj.hpp"
 
 /*-----------------------------------------------------------------------------
@@ -111,9 +111,9 @@ namespace Iris::Transport
   /*---------------------------------------------------------------------------
   Aliases
   ---------------------------------------------------------------------------*/
-  using DfltTXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_TX_PACKET_QUEUE_SIZE>;
-  using DfltRXQueue = etl::priority_queue<Packet, IRIS_TRANSPORT_RX_PACKET_QUEUE_SIZE>;
-  using PacketQueue = etl::ipriority_queue<Packet, etl::ivector<Packet>>;
+  using DfltTXQueue = etl::queue_spsc_atomic<Packet, IRIS_TRANSPORT_TX_PACKET_QUEUE_SIZE>;
+  using DfltRXQueue = etl::queue_spsc_atomic<Packet, IRIS_TRANSPORT_RX_PACKET_QUEUE_SIZE>;
+  using PacketQueue = etl::iqueue_spsc_atomic<Packet>;
 
 }    // namespace Iris::Transport
 

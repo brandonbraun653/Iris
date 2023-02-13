@@ -16,7 +16,7 @@
 Includes
 -----------------------------------------------------------------------------*/
 #include <Iris/src/session/session_types.hpp>
-#include <Iris/src/session/session_intf.hpp>
+#include <Iris/src/session/session_sock.hpp>
 
 namespace Iris::Session
 {
