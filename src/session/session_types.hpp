@@ -43,7 +43,6 @@ namespace Iris::Session
   using DfltSocketList = etl::forward_list<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
   using SocketPool     = etl::ipool;
   using DfltSocketPool = etl::pool<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
-  using SocketPort     = uint16_t;
 
   /*---------------------------------------------------------------------------
   Structures

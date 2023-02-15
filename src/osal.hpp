@@ -3,7 +3,7 @@
  *    osal.hpp
  *
  *  Description:
- *    OS abstraction layer
+ *    OS abstraction layer. This needs implementation by the Iris integrator.
  *
  *  2023 | Brandon Braun | brandonbraun653@protonmail.com
  *****************************************************************************/
@@ -20,24 +20,16 @@ Includes
 namespace Iris::OSAL
 {
   /*---------------------------------------------------------------------------
-  Enumerations
+  Aliases
   ---------------------------------------------------------------------------*/
-  enum class SemaphoreId : uint8_t
-  {
-    RX_READY_NOTIFY,
-    TX_READY_NOTIFY,
-    ERROR_NOTIFY,
+  using SemaphoreHandle_t = void *;
+  using MutexHandle_t     = void *;
 
-    NUM_OPTIONS
-  };
-
-  enum class MutexId : uint8_t
-  {
-    RX_QUEUE,
-    TX_QUEUE,
-
-    NUM_OPTIONS
-  };
+  /*---------------------------------------------------------------------------
+  Constants
+  ---------------------------------------------------------------------------*/
+  static constexpr uint32_t WAIT_FOREVER = 0xFFFFFFFF;
+  static constexpr uint32_t NO_WAIT      = 0x00000000;
 
   /*---------------------------------------------------------------------------
   Public Functions
@@ -50,54 +42,67 @@ namespace Iris::OSAL
   /**
    * @brief Creates a semaphore
    *
-   * @param id        The ID of the semaphore to create
    * @param maxCount  The maximum count of the semaphore
    * @param initCount The initial count of the semaphore
-   * @return bool
+   * @return SemaphoreHandle_t
    */
-  bool createSemaphore( const SemaphoreId id, const uint32_t maxCount, const uint32_t initCount );
+  SemaphoreHandle_t createSemaphore( const uint32_t maxCount, const uint32_t initCount );
+
+  /**
+   * @brief Deletes a semaphore
+   *
+   * @param handle    The handle of the semaphore to delete
+   * @return void
+   */
+  void deleteSemaphore( const SemaphoreHandle_t handle );
 
   /**
    * @brief Creates a mutex
-   *
-   * @param id        The ID of the mutex to create
-   * @return bool
+   * @return MutexHandle_t
    */
-  bool createMutex( const MutexId id );
+  MutexHandle_t createMutex();
+
+  /**
+   * @brief Deletes a mutex
+   *
+   * @param handle    The handle of the mutex to delete
+   * @return void
+   */
+  void deleteMutex( const MutexHandle_t handle );
 
   /**
    * @brief Waits for a semaphore to be signaled
    *
-   * @param id        The ID of the semaphore to wait on
+   * @param handle    The handle of the semaphore to wait on
    * @param timeout   The maximum amount of time to wait for the semaphore in milliseconds
    * @return bool
    */
-  bool waitSemaphore( const SemaphoreId id, const uint32_t timeout );
+  bool waitSemaphore( const SemaphoreHandle_t handle, const uint32_t timeout );
 
   /**
    * @brief Signals a semaphore
    *
-   * @param id        The ID of the semaphore to signal
+   * @param handle    The handle of the semaphore to signal
    * @return bool
    */
-  bool signalSemaphore( const SemaphoreId id );
+  bool signalSemaphore( const SemaphoreHandle_t handle );
 
   /**
    * @brief Locks a mutex
    *
-   * @param id        The ID of the mutex to lock
+   * @param handle    The handle of the mutex to lock
    * @param timeout   The maximum amount of time to wait for the mutex in milliseconds
    * @return bool
    */
-  bool lockMutex( const MutexId id, const uint32_t timeout );
+  bool lockMutex( const MutexHandle_t handle, const uint32_t timeout );
 
   /**
    * @brief Unlocks a mutex
    *
-   * @param id        The ID of the mutex to unlock
+   * @param handle    The handle of the mutex to unlock
    * @return bool
    */
-  bool unlockMutex( const MutexId id );
+  bool unlockMutex( const MutexHandle_t handle );
 
 }  // namespace Iris
 

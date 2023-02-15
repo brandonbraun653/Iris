@@ -38,6 +38,7 @@ namespace Iris::Transport
 
   Errno_t Packet::addFrame( Physical::Frame &frame )
   {
+    return -1;
   }
 
 

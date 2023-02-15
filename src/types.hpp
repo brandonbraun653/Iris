@@ -22,9 +22,9 @@ namespace Iris
   /*---------------------------------------------------------------------------
   Aliases
   ---------------------------------------------------------------------------*/
-  using Errno_t = int32_t;
+  using Errno_t    = int32_t;
+  using SocketPort = uint16_t;
 
+}    // namespace Iris
 
-}  // namespace Iris
-
-#endif  /* !IRIS_SHARED_TYPES_HPP */
+#endif /* !IRIS_SHARED_TYPES_HPP */

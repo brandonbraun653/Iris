@@ -102,23 +102,29 @@ namespace Iris::Physical
   {
     /**
      * @brief Called when the hardware is ready to send a frame
+     *
+     * @param port      Port that the frame should be sent on
      * @return void
      */
-    etl::delegate<void( void )> onTXReady;
+    etl::delegate<void( const SocketPort )> onTXReady;
 
     /**
      * @brief Called when the hardware has received a frame
+     *
+     * @param port      Port that the frame was received on
+     * @param count     How many frames are ready
      * @return void
      */
-    etl::delegate<void( void )> onRXReady;
+    etl::delegate<void( const SocketPort, const size_t )> onRXReady;
 
     /**
      * @brief Called when the hardware has encountered an error
      *
-     * @param error What error occurred
+     * @param port      Port that the error occurred on
+     * @param error     What error occurred
      * @return void
      */
-    etl::delegate<void( Errno_t )> onError;
+    etl::delegate<void( const SocketPort, const Errno_t )> onError;
   };
 
 
@@ -133,7 +139,7 @@ namespace Iris::Physical
      * @param cb        Callbacks for the hardware layer to notify the network layer
      * @return Errno_t
      */
-    etl::delegate<Errno_t( NotifyAPI & )> open;
+    etl::delegate<Errno_t( const Physical::NotifyAPI & )> open;
 
     /**
      * @brief Closes the hardware interface

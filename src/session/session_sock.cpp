@@ -71,4 +71,8 @@ namespace Iris::Session
     return -1;
   }
 
+  void Socket::accept_frame( const Physical::Frame &frame )
+  {
+  }
+
 }    // namespace Iris::Session

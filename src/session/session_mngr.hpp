@@ -17,6 +17,7 @@ Includes
 -----------------------------------------------------------------------------*/
 #include <Iris/src/session/session_types.hpp>
 #include <Iris/src/session/session_sock.hpp>
+#include <Iris/src/osal.hpp>
 
 namespace Iris::Session
 {
@@ -33,9 +34,9 @@ namespace Iris::Session
      * @brief Initializes the session layer
      *
      * @param cfg  Configuration parameters for the session layer
-     * @return void
+     * @return Errno_t
      */
-    void open( MgrCfg &cfg );
+    Errno_t open( MgrCfg &cfg );
 
     /**
      * @brief Shuts down the session layer and all connections
@@ -73,8 +74,17 @@ namespace Iris::Session
     const MgrStats &stats() const;
 
   private:
-    MgrCfg   mCfg;
-    MgrStats mStats;
+    MgrCfg                  mCfg;          /**< Configuration data for the session */
+    MgrStats                mStats;        /**< Runtime stats of all managed connections */
+    OSAL::MutexHandle_t     mMutex;        /**< Class lock */
+    OSAL::SemaphoreHandle_t mErrorSmphr;   /**< Error notification semaphore */
+    OSAL::SemaphoreHandle_t mTxReadySmphr; /**< Tx ready notification semaphore */
+    OSAL::SemaphoreHandle_t mRxReadySmphr; /**< Rx ready notification semaphore */
+
+    Physical::NotifyAPI asNotifyAPI();
+    void notify_tx_ready( const SocketPort port );
+    void notify_rx_ready( const SocketPort port, const size_t count );
+    void notify_error( const SocketPort port, const Errno_t error );
   };
 }    // namespace Iris::Session
 
