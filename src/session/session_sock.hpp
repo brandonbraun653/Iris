@@ -104,6 +104,12 @@ namespace Iris::Session
      */
     Errno_t error();
 
+    /**
+     * @brief Gets the port number for this socket
+     * @return SocketPort
+     */
+    SocketPort port() const;
+
   protected:
     friend class SessionManager;
 

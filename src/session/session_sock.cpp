@@ -71,6 +71,12 @@ namespace Iris::Session
     return -1;
   }
 
+
+  SocketPort Socket::port() const
+  {
+    return config.listenOn;
+  }
+
   void Socket::accept_frame( const Physical::Frame &frame )
   {
   }

@@ -3,7 +3,8 @@
  *    osal.hpp
  *
  *  Description:
- *    OS abstraction layer. This needs implementation by the Iris integrator.
+ *    OS abstraction layer. This needs implementation by the Iris integrator or
+ *    select one of the pre-built versions in the Iris/src/util directory.
  *
  *  2023 | Brandon Braun | brandonbraun653@protonmail.com
  *****************************************************************************/
@@ -28,7 +29,7 @@ namespace Iris::OSAL
   /*---------------------------------------------------------------------------
   Constants
   ---------------------------------------------------------------------------*/
-  static constexpr uint32_t WAIT_FOREVER = 0xFFFFFFFF;
+  static constexpr uint32_t BLOCK = 0xFFFFFFFF;
   static constexpr uint32_t NO_WAIT      = 0x00000000;
 
   /*---------------------------------------------------------------------------
@@ -40,13 +41,10 @@ namespace Iris::OSAL
   void init();
 
   /**
-   * @brief Creates a semaphore
-   *
-   * @param maxCount  The maximum count of the semaphore
-   * @param initCount The initial count of the semaphore
+   * @brief Creates a binary semaphore
    * @return SemaphoreHandle_t
    */
-  SemaphoreHandle_t createSemaphore( const uint32_t maxCount, const uint32_t initCount );
+  SemaphoreHandle_t createSemaphore();
 
   /**
    * @brief Deletes a semaphore
@@ -54,7 +52,7 @@ namespace Iris::OSAL
    * @param handle    The handle of the semaphore to delete
    * @return void
    */
-  void deleteSemaphore( const SemaphoreHandle_t handle );
+  void deleteSemaphore( SemaphoreHandle_t handle );
 
   /**
    * @brief Creates a mutex
@@ -68,7 +66,7 @@ namespace Iris::OSAL
    * @param handle    The handle of the mutex to delete
    * @return void
    */
-  void deleteMutex( const MutexHandle_t handle );
+  void deleteMutex( MutexHandle_t handle );
 
   /**
    * @brief Waits for a semaphore to be signaled
@@ -83,9 +81,9 @@ namespace Iris::OSAL
    * @brief Signals a semaphore
    *
    * @param handle    The handle of the semaphore to signal
-   * @return bool
+   * @return void
    */
-  bool signalSemaphore( const SemaphoreHandle_t handle );
+  void signalSemaphore( const SemaphoreHandle_t handle );
 
   /**
    * @brief Locks a mutex
@@ -100,9 +98,9 @@ namespace Iris::OSAL
    * @brief Unlocks a mutex
    *
    * @param handle    The handle of the mutex to unlock
-   * @return bool
+   * @return void
    */
-  bool unlockMutex( const MutexHandle_t handle );
+  void unlockMutex( const MutexHandle_t handle );
 
 }  // namespace Iris
 

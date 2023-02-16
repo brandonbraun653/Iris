@@ -56,7 +56,7 @@ namespace Iris::Session
      * @param cfg   Configuration parameters for the socket
      * @return Socket*
      */
-    Socket *createSocket( const SockCfg &cfg );
+    Errno_t createSocket( const SockCfg &cfg );
 
     /**
      * @brief Destroys a socket and removes it from the manager
@@ -65,6 +65,14 @@ namespace Iris::Session
      * @return void
      */
     void destroySocket( Socket *socket );
+
+    /**
+     * @brief Gets the socket associated with the given port
+     *
+     * @param port  Port to search for
+     * @return Socket*
+     */
+    Socket *getSocket( const SocketPort port );
 
     /**
      * @brief Gets the runtime metrics for the session layer

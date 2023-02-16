@@ -39,8 +39,8 @@ namespace Iris::Session
   /*---------------------------------------------------------------------------
   Aliases
   ---------------------------------------------------------------------------*/
-  using SocketList     = etl::iforward_list<Socket>;
-  using DfltSocketList = etl::forward_list<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
+  using SocketList     = etl::iforward_list<Socket*>;
+  using DfltSocketList = etl::forward_list<Socket*, IRIS_SESSION_MAX_CONNECTIONS>;
   using SocketPool     = etl::ipool;
   using DfltSocketPool = etl::pool<Socket, IRIS_SESSION_MAX_CONNECTIONS>;
 

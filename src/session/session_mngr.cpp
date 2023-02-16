@@ -34,11 +34,19 @@ namespace Iris::Session
   Errno_t SessionManager::open( MgrCfg &cfg )
   {
     /*-------------------------------------------------------------------------
+    Validate the configuration parameters
+    -------------------------------------------------------------------------*/
+    if ( !cfg.netif.open || !cfg.netif.close || !cfg.netif.get || !cfg.netif.put || !cfg.netif.process )
+    {
+      return -1;
+    }
+
+    /*-------------------------------------------------------------------------
     Create the semaphores and mutexes
     -------------------------------------------------------------------------*/
-    mTxReadySmphr = OSAL::createSemaphore( 1, 0 );
-    mRxReadySmphr = OSAL::createSemaphore( 1, 0 );
-    mErrorSmphr   = OSAL::createSemaphore( 1, 0 );
+    mTxReadySmphr = OSAL::createSemaphore();
+    mRxReadySmphr = OSAL::createSemaphore();
+    mErrorSmphr   = OSAL::createSemaphore();
     mMutex        = OSAL::createMutex();
 
     if( !mTxReadySmphr || !mRxReadySmphr || !mErrorSmphr || !mMutex )
@@ -47,25 +55,36 @@ namespace Iris::Session
     }
 
     /*-------------------------------------------------------------------------
-    Validate the configuration parameters
+    Accept the configuration and initialize memory pools
     -------------------------------------------------------------------------*/
-    if ( !cfg.netif.open || !cfg.netif.close || !cfg.netif.get || !cfg.netif.put || !cfg.netif.process )
-    {
-      return -1;
-    }
-
-    cfg.socketList->clear();
-    cfg.socketPool->release_all();
+    mCfg = cfg;
+    mCfg.socketList->clear();
+    mCfg.socketPool->release_all();
 
     /*-------------------------------------------------------------------------
     Open the physical layer and bind the notifier callbacks
     -------------------------------------------------------------------------*/
-    return cfg.netif.open( asNotifyAPI() );
+    return mCfg.netif.open( asNotifyAPI() );
   }
 
 
   void SessionManager::close()
   {
+    /*-------------------------------------------------------------------------
+    Close any open sockets
+    -------------------------------------------------------------------------*/
+    OSAL::lockMutex( mMutex, OSAL::BLOCK );
+    for( auto &socket : *mCfg.socketList )
+    {
+      socket->close();
+      mCfg.socketList->remove( socket );
+      mCfg.socketPool->release( socket );
+    }
+    OSAL::unlockMutex( mMutex );
+
+    /*-------------------------------------------------------------------------
+    Destroy the semaphores and mutexes
+    -------------------------------------------------------------------------*/
     OSAL::deleteSemaphore( mTxReadySmphr );
     OSAL::deleteSemaphore( mRxReadySmphr );
     OSAL::deleteSemaphore( mErrorSmphr );
@@ -78,14 +97,63 @@ namespace Iris::Session
   }
 
 
-  Socket *SessionManager::createSocket( const SockCfg &cfg )
+  Errno_t SessionManager::createSocket( const SockCfg &cfg )
   {
-    return nullptr;
+    /*-------------------------------------------------------------------------
+    Validate input arguments
+    -------------------------------------------------------------------------*/
+    if( !cfg.framePool || !cfg.rxQueue || !cfg.txQueue )
+    {
+      return -1;
+    }
+
+    /*-------------------------------------------------------------------------
+    Ensure there is enough room
+    -------------------------------------------------------------------------*/
+    OSAL::lockMutex( mMutex, OSAL::BLOCK );
+    if ( mCfg.socketPool->empty() || mCfg.socketList->full() )
+    {
+      OSAL::unlockMutex( mMutex );
+      return -1;
+    }
+
+    /*-------------------------------------------------------------------------
+    Instantiate the socket from the allocator pool
+    -------------------------------------------------------------------------*/
+    Socket * newSocket = mCfg.socketPool->allocate<Socket>();
+    assert( newSocket );
+    mCfg.socketList->push_front( newSocket );
+    OSAL::unlockMutex( mMutex );
+
+    return newSocket->open( cfg );
   }
 
 
   void SessionManager::destroySocket( Socket *socket )
   {
+    assert( socket );
+
+    OSAL::lockMutex( mMutex, OSAL::BLOCK );
+    mCfg.socketList->remove( socket );
+    mCfg.socketPool->release( socket );
+    OSAL::unlockMutex( mMutex );
+  }
+
+
+  Socket *SessionManager::getSocket( const SocketPort port )
+  {
+    OSAL::lockMutex( mMutex, OSAL::BLOCK );
+    for( const auto &socket : *mCfg.socketList )
+    {
+      if( socket->port() == port )
+      {
+        OSAL::unlockMutex( mMutex );
+        return socket;
+      }
+    }
+
+    OSAL::unlockMutex( mMutex );
+    return nullptr;
   }
 
 
