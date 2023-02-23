@@ -111,7 +111,7 @@ namespace Iris::Session
     Ensure there is enough room
     -------------------------------------------------------------------------*/
     OSAL::lockMutex( mMutex, OSAL::BLOCK );
-    if ( mCfg.socketPool->empty() || mCfg.socketList->full() )
+    if ( mCfg.socketPool->full() || mCfg.socketList->full() )
     {
       OSAL::unlockMutex( mMutex );
       return -1;

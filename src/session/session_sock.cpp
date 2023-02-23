@@ -28,22 +28,23 @@ namespace Iris::Session
 
   Errno_t Socket::open( const SockCfg &cfg )
   {
-    return -1;
+    this->config = cfg;
+    return 0;
   }
 
   Errno_t Socket::accept( const size_t timeout )
   {
-    return -1;
+    return 0;
   }
 
   Errno_t Socket::connect( const SocketPort &conn, const size_t timeout )
   {
-    return -1;
+    return 0;
   }
 
   Errno_t Socket::close()
   {
-    return -1;
+    return 0;
   }
 
   size_t Socket::pendingMessages()
@@ -58,17 +59,17 @@ namespace Iris::Session
 
   ssize_t Socket::read( void *const buffer, const size_t size )
   {
-    return -1;
+    return 0;
   }
 
   ssize_t Socket::write( const void *const buffer, const size_t size )
   {
-    return -1;
+    return 0;
   }
 
   Errno_t Socket::error()
   {
-    return -1;
+    return 0;
   }
 
 
